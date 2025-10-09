@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: hr-payroll
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      bindings:
+        input:
+          destination: test-topic

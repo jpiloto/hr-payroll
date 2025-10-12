@@ -16,25 +16,20 @@ public class EmployeeCreatedListener {
     private final PayrollService payrollService;
     private final ObjectMapper objectMapper;
 
-    //@KafkaListener(topics = "employee.created", groupId = "${spring.kafka.consumer.group-id}")
     @KafkaListener(topics = "employee.created", groupId = "hr-payroll-group-dto")
     public void handleEmployeeCreated(String message) {
         try {
-            System.out.println("Received dto: " + message);
-            log.info("Received employee.created event: {}", message);
             PayrollRecordDTO dto = objectMapper.readValue(message, PayrollRecordDTO.class);
             payrollService.save(dto);
             log.info("Payroll record created for employeeId: {}", dto.getEmployeeId());
         } catch (Exception e) {
-            log.error("Failed to process employee.created event", e);
+            log.error("Failed to process employee.created event: {}", message, e);
         }
     }
 
-    //@KafkaListener(topics = "employee.created", groupId = "${spring.kafka.consumer.group-id}")
     @KafkaListener(topics = "employee.created", groupId = "hr-payroll-group-raw")
     public void listenRaw(String message) {
-        System.out.println("Received raw: " + message);
-        log.info("Received raw event: {}", message);
+        log.debug("Raw employee.created event received: {}", message);
     }
 
 }

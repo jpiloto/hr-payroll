@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.mockito.ArgumentCaptor;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,18 +57,22 @@ public class KafkaIntegrationTest {
     @BeforeEach
     public void setup() {
         reset(payrollService);
+        validMessage = "{\"employeeId\":101,\"salary\":6500.00,\"payDate\":\"2025-10-09\"}";
+    }
+
+    private KafkaTemplate<String, String> createKafkaTemplate() {
         Map<String, Object> producerProps = KafkaTestUtils.producerProps(embeddedKafka);
-        KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(
+        return new KafkaTemplate<>(
                 new DefaultKafkaProducerFactory<>(producerProps, new StringSerializer(), new StringSerializer())
         );
-
-        validMessage = "{\"employeeId\":101,\"salary\":6500.00,\"payDate\":\"2025-10-09\"}";
-        kafkaTemplate.send("employee.created", validMessage);
-        kafkaTemplate.flush();
     }
 
     @Test
     public void testKafkaMessageConsumption() {
+        KafkaTemplate<String, String> kafkaTemplate = createKafkaTemplate();
+        kafkaTemplate.send("employee.created", validMessage);
+        kafkaTemplate.flush();
+
         await()
                 .atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
@@ -79,7 +85,6 @@ public class KafkaIntegrationTest {
                     assertEquals(LocalDate.parse("2025-10-09"), dto.getPayDate());
                 });
     }
-
 
     @Test
     public void testHandleEmployeeCreatedDirectly() throws Exception {
@@ -100,4 +105,10 @@ public class KafkaIntegrationTest {
         assertNotNull(employeeCreatedListener);
     }
 
+    @Test
+    public void testInvalidMessageIgnored() {
+        String invalidMessage = "{\"employeeId\":\"oops\",\"salary\":\"NaN\"}";
+        employeeCreatedListener.handleEmployeeCreated(invalidMessage);
+        verify(payrollService, times(0)).save(any());
+    }
 }

@@ -9,6 +9,14 @@ public class PayrollMapper {
         return PayrollRecordDTO.builder()
                 .id(entity.getId())
                 .employeeId(entity.getEmployeeId())
+                .name(entity.getName())
+                .email(entity.getEmail())
+                .jobTitle(entity.getJobTitle())
+                .phoneNumber(entity.getPhoneNumber())
+                .hireDate(entity.getHireDate())
+                .departmentId(entity.getDepartmentId())
+                .roleIds(entity.getRoleIds())
+                .jobPositionTitle(entity.getJobPositionTitle())
                 .salary(entity.getSalary())
                 .payDate(entity.getPayDate())
                 .build();
@@ -16,10 +24,15 @@ public class PayrollMapper {
 
     public static PayrollRecord toEntity(PayrollRecordDTO dto) {
         return PayrollRecord.builder()
-                .id(dto.getId())
                 .employeeId(dto.getEmployeeId())
-                .salary(dto.getSalary())
-                .payDate(dto.getPayDate())
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .jobTitle(dto.getJobTitle())
+                .phoneNumber(dto.getPhoneNumber())
+                .hireDate(dto.getHireDate())
+                .departmentId(dto.getDepartmentId())
+                .roleIds(dto.getRoleIds())
+                .jobPositionTitle(dto.getJobPositionTitle())
                 .build();
     }
 }

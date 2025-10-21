@@ -5,6 +5,7 @@ import com.hrapp.hr_payroll.mapper.PayrollMapper;
 import com.hrapp.hr_payroll.model.PayrollRecord;
 import com.hrapp.hr_payroll.repository.PayrollRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PayrollService {
@@ -32,7 +34,9 @@ public class PayrollService {
 
         BigDecimal totalSalary = base.add(bonus).add(titleAdj);
         entity.setSalary(totalSalary);
+        entity.setPayDate(LocalDate.now());
 
+        log.info("Payroll saved for {} with payDate {}", dto.getName(), entity.getPayDate());
         return PayrollMapper.toDTO(payrollRepository.save(entity));
     }
 

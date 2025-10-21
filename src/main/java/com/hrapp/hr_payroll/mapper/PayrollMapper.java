@@ -17,6 +17,7 @@ public class PayrollMapper {
                 .departmentId(entity.getDepartmentId())
                 .roleIds(entity.getRoleIds())
                 .jobPositionTitle(entity.getJobPositionTitle())
+                .jobPositionLevel(entity.getJobPositionLevel())
                 .salary(entity.getSalary())
                 .payDate(entity.getPayDate())
                 .build();
@@ -33,6 +34,8 @@ public class PayrollMapper {
                 .departmentId(dto.getDepartmentId())
                 .roleIds(dto.getRoleIds())
                 .jobPositionTitle(dto.getJobPositionTitle())
+                .jobPositionLevel(dto.getJobPositionLevel())
+                .payDate(dto.getPayDate())
                 .build();
     }
 }

@@ -32,6 +32,7 @@ public class PayrollRecord {
 
     private String jobPositionTitle;
     private BigDecimal salary;
+    private Integer jobPositionLevel;
     private LocalDate payDate;
 
 }

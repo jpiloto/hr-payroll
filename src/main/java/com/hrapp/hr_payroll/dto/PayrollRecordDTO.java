@@ -21,6 +21,7 @@ public class PayrollRecordDTO {
     private Long departmentId;
     private Set<Long> roleIds;
     private String jobPositionTitle;
+    private Integer jobPositionLevel;
     private BigDecimal salary;
     private LocalDate payDate;
 }
